@@ -1,0 +1,37 @@
+{
+  "expo": {
+    "name": "bahbeta",
+    "slug": "bahbeta",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/bahbeta_logo.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/bahbeta_logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/bahbeta_logo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.bahbeta"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/bahbeta_logo.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
