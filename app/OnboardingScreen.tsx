@@ -1,157 +1,165 @@
-import React, { useState, useRef } from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity, PanResponder, Dimensions, GestureResponderEvent, PanResponderGestureState } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter } from 'expo-router';
+import React, { useState } from "react";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 const OnboardingScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        const { dx } = gestureState;
-        return Math.abs(dx) > 10;
-      },
-      onPanResponderRelease: (evt: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-        const { dx } = gestureState;
-        if (dx < -50 && currentIndex < images.length - 1) {
-          setCurrentIndex(currentIndex + 1);
-        } else if (dx > 50 && currentIndex > 0) {
-          setCurrentIndex(currentIndex - 1);
-        }
-      },
-    })
-  ).current;
 
   const images = [
-    require('../assets/images/bahbeta_logo.png'),
-    require('../assets/images/bahbeta_logo.png'),
-    require('../assets/images/bahbeta_logo.png'),
+    require("../assets/images/bahbeta_logo.png"),
+    require("../assets/images/bahbeta_logo.png"),
+    require("../assets/images/onborading_lady_image.png"),
   ];
 
   const handleNext = () => {
     if (currentIndex < images.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      router.push("/(tabs)");
+      router.replace("/LoginScreen");
     }
   };
 
   const handleSkip = () => {
-    router.push("/(tabs)");
+    router.replace("/LoginScreen");
   };
 
   return (
-    <LinearGradient
-      colors={['#87CEEB', '#4169E1']}
-      style={styles.container}
-    >
-      <View {...panResponder.panHandlers}>
-        <Image source={images[currentIndex]} style={styles.image} />
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.title}>
-          {currentIndex === 0
-            ? 'Send Money More Wisely'
-            : currentIndex === 1
-            ? 'Smart Money Management'
-            : 'Easiest Way Send Money'}
-        </Text>
-        <Text style={styles.description}>
-          This is demo text here you can write according you.
-        </Text>
-      </View>
-      <View style={styles.indicatorContainer}>
-        {images.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.indicator,
-              index === currentIndex && styles.activeIndicator,
-            ]}
-          />
-        ))}
-      </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-          <Text style={styles.skipButtonText}>Skip</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-          <Text style={styles.nextButtonText}>
-            {currentIndex === images.length - 1 ? 'Get Started' : 'Next'}
+    <LinearGradient colors={["#87CEEB", "#E8F4F8"]} style={styles.container}>
+      <View style={styles.contentContainer}>
+        <View style={styles.imageContainer}>
+          <View>
+            <Image
+              source={images[currentIndex]}
+              style={[styles.image, { transform: [{ scale: 0.8 }] }]}
+            />
+          </View>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>
+            {currentIndex === 0
+              ? "Send Money More Wisely"
+              : currentIndex === 1
+                ? "Smart Money Management"
+                : "Easiest Way Send Money"}
           </Text>
-        </TouchableOpacity>
+          <Text style={styles.description}>
+            This is demo text here you can write according you.
+          </Text>
+        </View>
+        <View style={styles.bottomContainer}>
+          <View style={styles.navigationContainer}>
+            <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
+              <Text style={styles.skipButtonText}>Skip</Text>
+            </TouchableOpacity>
+            <View style={styles.indicatorContainer}>
+              {images.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.indicator,
+                    index === currentIndex && styles.activeIndicator,
+                  ]}
+                />
+              ))}
+            </View>
+            <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
+              <Text style={styles.nextButtonText}>{">>"}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     </LinearGradient>
   );
 };
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
+    gap: 35,
+    paddingVertical: 40,
+  },
+  imageContainer: {
+    height: height * 0.5,
+    alignItems: "center",
+    justifyContent: "center",
   },
   image: {
-    width: '100%',
-    height: height * 0.55,
-    resizeMode: 'contain',
+    width: width,
+    height: width,
+    resizeMode: "contain",
   },
   textContainer: {
-    marginVertical: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 10,
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
-    color: '#FFFFFF',
-    textAlign: 'center',
+    color: "#666",
+    textAlign: "center",
+    paddingHorizontal: 25,
+  },
+  bottomContainer: {
+    position: "absolute",
+    bottom: 50,
+    width: width,
     paddingHorizontal: 20,
   },
+  navigationContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   indicatorContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
+    flexDirection: "row",
+    alignItems: "center",
   },
   indicator: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    marginHorizontal: 5,
+    width: 20,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: "#000000",
+    marginHorizontal: 3,
   },
   activeIndicator: {
-    backgroundColor: '#FFFFFF',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    marginTop: 20,
+    backgroundColor: "#4169E1",
   },
   skipButton: {
     padding: 10,
   },
   skipButtonText: {
     fontSize: 16,
-    color: '#FFFFFF',
+    color: "#000",
+    fontWeight: "500",
   },
   nextButton: {
-    backgroundColor: '#FFFFFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    padding: 10,
   },
   nextButtonText: {
     fontSize: 16,
-    color: '#4169E1',
+    color: "#000",
+    fontWeight: "800",
+    letterSpacing: -2,
   },
 });
 
