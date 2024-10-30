@@ -6,9 +6,8 @@ import {
   StatusBar,
   Animated,
   TouchableOpacity,
-  Dimensions,
 } from "react-native";
-import { Ionicons, Feather, Entypo } from "@expo/vector-icons";
+import { Ionicons, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
 import Colors from "../../constants/Colors";
 import HomeScreen from "./HomeScreen";
@@ -27,7 +26,6 @@ type RootTabParamList = {
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const SIDEBAR_WIDTH = 240;
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const TAB_BAR_HEIGHT = 70;
 const TRIANGLE_SIZE = 80;
 
@@ -156,7 +154,7 @@ export default function TabsLayout() {
                 style={styles.menuContainer}
                 onPress={() => setIsSidebarVisible(true)}
               >
-                <Ionicons name="menu" size={24} />
+                <FontAwesome name="align-justify" size={24} />
               </TouchableOpacity>
               <Text style={styles.title}>bahbeta</Text>
               <View style={styles.notificationContainer}>

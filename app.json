@@ -4,11 +4,11 @@
     "slug": "bahbeta",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/bahbeta_logo.svg",
+    "icon": "./assets/images/bahbeta_logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/bahbeta_logo.svg",
+      "image": "./assets/images/bahbeta_logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/bahbeta_logo.svg",
+        "foregroundImage": "./assets/images/bahbeta_logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.bahbeta"
@@ -25,7 +25,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/bahbeta_logo.svg"
+      "favicon": "./assets/images/bahbeta_logo.png"
     },
     "plugins": [
       "expo-router"
