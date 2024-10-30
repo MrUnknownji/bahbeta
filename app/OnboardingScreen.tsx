@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import { Feather } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
 
@@ -74,7 +75,7 @@ const OnboardingScreen = () => {
               ))}
             </View>
             <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
-              <Text style={styles.nextButtonText}>{">>"}</Text>
+              <Feather name="chevrons-right" size={28} color="#000" />
             </TouchableOpacity>
           </View>
         </View>
@@ -154,12 +155,6 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     padding: 10,
-  },
-  nextButtonText: {
-    fontSize: 16,
-    color: "#000",
-    fontWeight: "800",
-    letterSpacing: -2,
   },
 });
 
