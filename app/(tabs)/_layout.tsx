@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
-import Colors from "../../constants/Colors";
+import Colors from "@/constants/Colors";
 
 const SIDEBAR_WIDTH = 240;
 const TAB_BAR_HEIGHT = 70;
@@ -62,16 +62,16 @@ const Sidebar = ({
         }),
       ]).start();
     }
-  }, [isVisible]);
+  }, [isVisible, slideAnim, fadeAnim]);
 
   return (
-    <View>
+    <>
       <Animated.View
         style={[
           styles.overlay,
           {
             opacity: fadeAnim,
-            display: isVisible ? "flex" : "none",
+            pointerEvents: isVisible ? "auto" : "none",
           },
         ]}
       >
@@ -118,7 +118,7 @@ const Sidebar = ({
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </Animated.View>
-    </View>
+    </>
   );
 };
 
