@@ -5,7 +5,8 @@ import {
   StatusBar,
   Animated,
   TouchableOpacity,
- StyleSheet 
+  StyleSheet,
+  Image,
 } from "react-native";
 import { Ionicons, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
@@ -132,7 +133,11 @@ export default function TabsLayout() {
       >
         <FontAwesome name="align-justify" size={24} />
       </TouchableOpacity>
-      <Text style={styles.title}>bahbeta</Text>
+      <Image
+        source={require("@/assets/images/bahbeta_text_logo.png")}
+        style={styles.title}
+        resizeMode="contain"
+      />
       <View style={styles.notificationContainer}>
         <Ionicons name="notifications" size={24} />
       </View>
@@ -231,9 +236,8 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "900",
-    color: Colors.primary,
+    width: "40%",
+    height: "100%",
   },
   notificationContainer: {
     width: 40,

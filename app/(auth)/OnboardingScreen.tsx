@@ -18,9 +18,9 @@ const OnboardingScreen = () => {
   const router = useRouter();
 
   const images = [
+    require("@/assets/images/onboarding_man_image.png"),
     require("@/assets/images/bahbeta_logo.png"),
     require("@/assets/images/onborading_lady_image.png"),
-    require("@/assets/images/bahbeta_logo.png"),
   ];
 
   const handleNext = () => {
