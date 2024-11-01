@@ -1,30 +1,16 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Tabs } from "expo-router";
 import {
   View,
   Text,
-  StyleSheet,
   StatusBar,
   Animated,
   TouchableOpacity,
+ StyleSheet 
 } from "react-native";
 import { Ionicons, Feather, Entypo, FontAwesome } from "@expo/vector-icons";
 import { useState, useRef, useEffect } from "react";
 import Colors from "../../constants/Colors";
-import HomeScreen from "./HomeScreen";
-import InvoiceScreen from "./InvoiceScreen";
-import SearchScreen from "./SearchScreen";
-import ItemsScreen from "./ItemsScreen";
-import ReferralScreen from "./ReferralScreen";
 
-type RootTabParamList = {
-  Home: undefined;
-  Invoice: undefined;
-  Search: undefined;
-  Items: undefined;
-  Referral: undefined;
-};
-
-const Tab = createBottomTabNavigator<RootTabParamList>();
 const SIDEBAR_WIDTH = 240;
 const TAB_BAR_HEIGHT = 70;
 const TRIANGLE_SIZE = 80;
@@ -32,9 +18,7 @@ const TRIANGLE_SIZE = 80;
 const TabBarBackground = () => (
   <View style={styles.tabBarContainer}>
     <View style={[styles.triangle, styles.leftTriangle]} />
-
     <View style={[styles.triangle, styles.rightTriangle]} />
-
     <View style={styles.tabBarBackground} />
   </View>
 );
@@ -80,7 +64,7 @@ const Sidebar = ({
   }, [isVisible]);
 
   return (
-    <>
+    <View>
       <Animated.View
         style={[
           styles.overlay,
@@ -133,12 +117,27 @@ const Sidebar = ({
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
       </Animated.View>
-    </>
+    </View>
   );
 };
 
 export default function TabsLayout() {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
+  const Header = () => (
+    <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.menuContainer}
+        onPress={() => setIsSidebarVisible(true)}
+      >
+        <FontAwesome name="align-justify" size={24} />
+      </TouchableOpacity>
+      <Text style={styles.title}>bahbeta</Text>
+      <View style={styles.notificationContainer}>
+        <Ionicons name="notifications" size={24} />
+      </View>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -146,71 +145,73 @@ export default function TabsLayout() {
         isVisible={isSidebarVisible}
         onClose={() => setIsSidebarVisible(false)}
       />
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          header: () => (
-            <View style={styles.header}>
-              <TouchableOpacity
-                style={styles.menuContainer}
-                onPress={() => setIsSidebarVisible(true)}
-              >
-                <FontAwesome name="align-justify" size={24} />
-              </TouchableOpacity>
-              <Text style={styles.title}>bahbeta</Text>
-              <View style={styles.notificationContainer}>
-                <Ionicons name="notifications" size={24} />
-              </View>
-            </View>
-          ),
-          tabBarIcon: ({ focused, color, size }) => {
-            switch (route.name) {
-              case "Home":
-                return <Feather name="home" size={size} color={color} />;
-              case "Invoice":
-                return <Feather name="file-text" size={size} color={color} />;
-              case "Items":
-                return <Feather name="list" size={size} color={color} />;
-              case "Referral":
-                return <Entypo name="database" size={size} color={color} />;
-              default:
-                return null;
-            }
-          },
+      <Tabs
+        screenOptions={{
+          header: () => <Header />,
           tabBarActiveTintColor: Colors.primary,
           tabBarInactiveTintColor: Colors.textSecondary,
           tabBarStyle: {
             backgroundColor: "transparent",
-            height: TAB_BAR_HEIGHT,
             elevation: 0,
             borderTopWidth: 0,
             position: "absolute",
             bottom: 0,
+            paddingBottom: 5,
           },
           tabBarBackground: () => <TabBarBackground />,
           tabBarLabelStyle: {
             fontSize: 12,
-            marginTop: -10,
-            paddingBottom: 10,
           },
-        })}
+        }}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Invoice" component={InvoiceScreen} />
-        <Tab.Screen
-          name="Search"
-          component={SearchScreen}
+        <Tabs.Screen
+          name="index"
           options={{
-            tabBarIcon: ({ focused }) => (
+            title: "Home",
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="home" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="invoice"
+          options={{
+            title: "Invoice",
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="file-text" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="search"
+          options={{
+            title: "",
+            tabBarIcon: () => (
               <View style={styles.searchButton}>
                 <Ionicons name="search" size={24} color={Colors.background} />
               </View>
             ),
-            tabBarLabel: () => null,
           }}
         />
-        <Tab.Screen name="Items" component={ItemsScreen} />
-        <Tab.Screen name="Referral" component={ReferralScreen} />
-      </Tab.Navigator>
+        <Tabs.Screen
+          name="items"
+          options={{
+            title: "Items",
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="list" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="referral"
+          options={{
+            title: "Referral",
+            tabBarIcon: ({ color, size }) => (
+              <Entypo name="database" size={size} color={color} />
+            ),
+          }}
+        />
+      </Tabs>
     </View>
   );
 }
@@ -253,14 +254,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
   overlay: {
     position: "absolute",

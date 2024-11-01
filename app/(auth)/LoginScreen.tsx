@@ -6,7 +6,7 @@ import BottomSheet, {
   BottomSheetView,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
-import Colors from "../constants/Colors";
+import Colors from "@/constants/Colors";
 import { InputField } from "@/components/LoginScreen Components/InputField";
 import { RememberMeCheckbox } from "@/components/LoginScreen Components/RememberMeCheckbox";
 import { CustomButton } from "@/components/LoginScreen Components/CustomButton";
@@ -50,7 +50,7 @@ const LoginScreen = () => {
   };
 
   const handleLogin = () => {
-    router.push("/(tabs)");
+    router.replace("/(tabs)");
   };
 
   const handleRememberMeToggle = () => {

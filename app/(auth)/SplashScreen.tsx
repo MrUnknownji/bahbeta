@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
+import { router } from "expo-router";
 
 const SplashScreen = () => {
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      router.replace('/OnboardingScreen');
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
   return (
     <LinearGradient colors={Colors.gradient} style={styles.container}>
       <View style={styles.iconContainer}>
         <Image
-          source={require("../assets/images/bahbeta_logo.png")}
+          source={require("@/assets/images/bahbeta_logo.png")}
           style={styles.image}
         />
       </View>

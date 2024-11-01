@@ -1,5 +1,5 @@
-import { Text, View } from "react-native";
-import SplashScreen from "./SplashScreen";
+import { View } from "react-native";
+import SplashScreen from "./(auth)/SplashScreen";
 import "react-native-gesture-handler";
 
 export default function Index() {

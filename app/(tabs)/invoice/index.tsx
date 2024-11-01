@@ -6,19 +6,37 @@ import {
   ScrollView,
   FlatList,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { router } from "expo-router";
 import Colors from "@/constants/Colors";
 
-type FontAwesomeNames = "arrow-circle-right" | "user" | "gift" | "tags" | "envelope" | "lightbulb-o";
+type FontAwesomeNames =
+  | "arrow-circle-right"
+  | "user"
+  | "gift"
+  | "tags"
+  | "envelope"
+  | "lightbulb-o";
 
-const iconData: Array<{id: string, name: FontAwesomeNames, label: string}> = [
-  { id: "1", name: "arrow-circle-right", label: "Send" },
-  { id: "2", name: "user", label: "Request" },
+const iconData: Array<{
+  id: string;
+  name: FontAwesomeNames;
+  label: string;
+  route?: "recreate-invoice" | "create-invoice" | "send-detail" | "request-invoice";
+}> = [
+  {
+    id: "1",
+    name: "arrow-circle-right",
+    label: "Send",
+    route: "create-invoice",
+  },
+  { id: "2", name: "user", label: "Request", route: "recreate-invoice" },
   { id: "3", name: "gift", label: "Send Gift" },
   { id: "4", name: "tags", label: "Tags" },
-  { id: "5", name: "envelope", label: "Withdraw" },
-  { id: "6", name: "lightbulb-o", label: "Bill Pay" },
+  { id: "5", name: "envelope", label: "Withdraw" ,route:"send-detail"},
+  { id: "6", name: "lightbulb-o", label: "Bill Pay", route: "request-invoice" },
 ];
 
 const quickSendData = [
@@ -48,7 +66,8 @@ const recentActivityData = [
     name: "Michael B. Jordan",
     time: "10 Novmeber 2024",
     amount: "-50 USD",
-  },{
+  },
+  {
     id: "4",
     name: "Gabriel B. Ross",
     time: "10 Novmeber 2024",
@@ -69,16 +88,26 @@ const recentActivityData = [
 ];
 
 export default function InvoiceScreen() {
+  const handleInvoiceListItemPress = () => {
+    router.push("/invoice/invoice-detail");
+  };
   return (
     <View style={styles.container}>
       <View style={styles.iconsContainer}>
-        {iconData.map((item, index) => (
-          <View style={styles.iconWrapper} key={item.id}>
+        {iconData.map((item) => (
+          <TouchableOpacity
+            style={styles.iconWrapper}
+            key={item.id}
+            onPress={() => {
+              if(item.route){
+              router.push(`/invoice/${item.route}`);}
+            }}
+          >
             <View style={styles.iconContainer}>
               <FontAwesome name={item.name} size={24} color={Colors.primary} />
             </View>
             <Text style={styles.iconLabel}>{item.label}</Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
 
@@ -87,14 +116,22 @@ export default function InvoiceScreen() {
           <Text style={styles.quickSendHeaderText}>Quick Send</Text>
           <Text style={styles.seeAllText}>See All</Text>
         </View>
-        <ScrollView style={styles.quickSendListContainer} horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{paddingHorizontal:20}}>
+        <ScrollView
+          style={styles.quickSendListContainer}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+        >
           {quickSendData.map((item) => (
-            <View style={styles.quickSendItem} key={item.id}>
+            <TouchableOpacity style={styles.quickSendItem} key={item.id}>
               <View style={styles.quickSendItemAvatar}>
-                <Image source={require("@/assets/images/quick-send-person.png")} style={styles.quickSendItemAvatarImage} />
+                <Image
+                  source={require("@/assets/images/quick-send-person.png")}
+                  style={styles.quickSendItemAvatarImage}
+                />
               </View>
               <Text style={styles.quickSendItemText}>{item.name}</Text>
-            </View>
+            </TouchableOpacity>
           ))}
         </ScrollView>
       </View>
@@ -108,18 +145,24 @@ export default function InvoiceScreen() {
           data={recentActivityData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.recentActivityItem}>
+            <TouchableOpacity
+              style={styles.recentActivityItem}
+              onPress={handleInvoiceListItemPress}
+            >
               <View style={styles.recentActivityItemAvatar}>
-                <Image source={require("../../assets/images/paypal.png")} width={40} height={40} resizeMode="contain"/>
+                <Image
+                  source={require("@/assets/images/paypal.png")}
+                  width={40}
+                  height={40}
+                  resizeMode="contain"
+                />
               </View>
               <View style={styles.recentActivityItemContent}>
                 <Text style={styles.recentActivityItemText}>{item.name}</Text>
                 <Text style={styles.recentActivityItemDate}>{item.time}</Text>
               </View>
-              <Text style={styles.recentActivityItemAmount}>
-                {item.amount}
-              </Text>
-            </View>
+              <Text style={styles.recentActivityItemAmount}>{item.amount}</Text>
+            </TouchableOpacity>
           )}
           showsVerticalScrollIndicator={false}
         />
@@ -136,6 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
+    marginTop: 10,
   },
   iconWrapper: {
     width: "30%",
@@ -143,8 +187,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   iconContainer: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 15,
     backgroundColor: "white",
     justifyContent: "center",
@@ -159,13 +203,12 @@ const styles = StyleSheet.create({
   quickSendContainer: {
     paddingVertical: 15,
     backgroundColor: Colors.background,
-    margin:20,
-    marginBottom:0,
-    borderRadius:20,
-    overflow:"hidden"
+    margin: 20,
+    marginBottom: 0,
+    borderRadius: 20,
+    overflow: "hidden",
   },
-  quickSendListContainer: {
-  },
+  quickSendListContainer: {},
   quickSendHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -210,7 +253,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal:10
+    paddingHorizontal: 10,
   },
   recentActivityHeaderText: {
     fontSize: 16,
@@ -228,7 +271,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
-    marginLeft:5
+    marginLeft: 5,
   },
   recentActivityItemContent: {
     flex: 1,
