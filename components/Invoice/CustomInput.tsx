@@ -1,75 +1,26 @@
-// import React from 'react';
-// import { View, TextInput, Text, StyleSheet } from 'react-native';
-// import Colors from '@/constants/Colors';
-
-// type CustomInputProps = {
-//   label: string;
-//   value: string;
-//   onChangeText: (text: string) => void;
-//   placeholder?: string;
-//   multiline?: boolean;
-// };
-
-// export const CustomInput = ({ 
-//   label, 
-//   value, 
-//   onChangeText, 
-//   placeholder,
-//   multiline = false 
-// }: CustomInputProps) => {
-//   return (
-//     <View style={styles.inputContainer}>
-//       <TextInput
-//         style={[styles.input, multiline && styles.multilineInput]}
-//         value={value}
-//         onChangeText={onChangeText}
-//         placeholder={label}
-//         multiline={multiline}
-//         placeholderTextColor={Colors.textSecondary}
-//       />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   inputContainer: {
-//     marginBottom: 16,
-//   },
-//   input: {
-//     backgroundColor: '#F1F4FF',
-//     borderRadius: 12,
-//     padding: 16,
-//     fontSize: 16,
-//     color: Colors.textPrimary,
-//   },
-//   multilineInput: {
-//     height: 100,
-//     textAlignVertical: 'top',
-//   },
-// });
-import React, { useState } from 'react';
-import { 
-  View, 
-  TextInput, 
-  Text, 
-  StyleSheet, 
-  Modal, 
-  TouchableOpacity, 
+import React, { useState } from "react";
+import {
+  View,
+  TextInput,
+  Text,
+  StyleSheet,
+  Modal,
+  TouchableOpacity,
   FlatList,
   Dimensions,
   Platform,
-  Pressable
-} from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { FontAwesome } from '@expo/vector-icons';
-import Colors from '@/constants/Colors';
+  Pressable,
+} from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { FontAwesome } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
 
 type Option = {
   title: string;
   value: string | number;
 };
 
-type InputType = 'text' | 'date' | 'select';
+type InputType = "text" | "date" | "select";
 
 type CustomInputProps = {
   label: string;
@@ -81,14 +32,14 @@ type CustomInputProps = {
   options?: Option[];
 };
 
-export const CustomInput = ({ 
-  label, 
-  value, 
-  onChangeText, 
+export const CustomInput = ({
+  label,
+  value,
+  onChangeText,
   placeholder,
   multiline = false,
-  type = 'text',
-  options = []
+  type = "text",
+  options = [],
 }: CustomInputProps) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
@@ -96,7 +47,7 @@ export const CustomInput = ({
   const handleDateChange = (event: any, selectedDate?: Date) => {
     setShowDatePicker(false);
     if (selectedDate) {
-      onChangeText(selectedDate.toISOString().split('T')[0]);
+      onChangeText(selectedDate.toISOString().split("T")[0]);
     }
   };
 
@@ -107,29 +58,35 @@ export const CustomInput = ({
 
   const renderInput = () => {
     switch (type) {
-      case 'date':
+      case "date":
         return (
-          <Pressable 
-            style={[styles.input, styles.dateInput]} 
+          <Pressable
+            style={[styles.input, styles.dateInput]}
             onPress={() => setShowDatePicker(true)}
           >
             <Text style={styles.inputText}>
               {value || placeholder || label}
             </Text>
-            <FontAwesome name='calendar' size={20} color={Colors.textPrimary} />
+            <FontAwesome name="calendar" size={20} color={Colors.textPrimary} />
           </Pressable>
         );
 
-      case 'select':
+      case "select":
         return (
-          <Pressable 
-            style={[styles.input, styles.selectInput]} 
+          <Pressable
+            style={[styles.input, styles.selectInput]}
             onPress={() => setShowOptions(true)}
           >
             <Text style={styles.inputText}>
-              {options.find(opt => opt.value.toString() === value)?.title || placeholder || label}
+              {options.find((opt) => opt.value.toString() === value)?.title ||
+                placeholder ||
+                label}
             </Text>
-            <FontAwesome name='chevron-circle-down' size={20} color={Colors.textPrimary} />
+            <FontAwesome
+              name="chevron-circle-down"
+              size={20}
+              color={Colors.textPrimary}
+            />
           </Pressable>
         );
 
@@ -153,7 +110,7 @@ export const CustomInput = ({
       {renderInput()}
 
       {/* Date Picker Modal */}
-      {showDatePicker && Platform.OS === 'android' && (
+      {showDatePicker && Platform.OS === "android" && (
         <DateTimePicker
           value={value ? new Date(value) : new Date()}
           mode="date"
@@ -168,7 +125,7 @@ export const CustomInput = ({
         animationType="fade"
         onRequestClose={() => setShowOptions(false)}
       >
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.modalOverlay}
           activeOpacity={1}
           onPress={() => setShowOptions(false)}
@@ -179,14 +136,17 @@ export const CustomInput = ({
               data={options}
               keyExtractor={(item) => item.value.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity 
+                <TouchableOpacity
                   style={styles.optionItem}
                   onPress={() => handleOptionSelect(item)}
                 >
-                  <Text style={[
-                    styles.optionText,
-                    item.value.toString() === value && styles.selectedOptionText
-                  ]}>
+                  <Text
+                    style={[
+                      styles.optionText,
+                      item.value.toString() === value &&
+                        styles.selectedOptionText,
+                    ]}
+                  >
                     {item.title}
                   </Text>
                 </TouchableOpacity>
@@ -204,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   input: {
-    backgroundColor: '#F1F4FF',
+    backgroundColor: "#F1F4FF",
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
@@ -212,17 +172,17 @@ const styles = StyleSheet.create({
   },
   multilineInput: {
     height: 100,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
   },
   dateInput: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   selectInput: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   inputText: {
     fontSize: 16,
@@ -230,20 +190,20 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 12,
     padding: 16,
-    width: Dimensions.get('window').width * 0.9,
-    maxHeight: Dimensions.get('window').height * 0.7,
+    width: Dimensions.get("window").width * 0.9,
+    maxHeight: Dimensions.get("window").height * 0.7,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 16,
     color: Colors.textPrimary,
   },
@@ -251,7 +211,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F4FF',
+    borderBottomColor: "#F1F4FF",
   },
   optionText: {
     fontSize: 16,
@@ -259,6 +219,6 @@ const styles = StyleSheet.create({
   },
   selectedOptionText: {
     color: Colors.primary,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

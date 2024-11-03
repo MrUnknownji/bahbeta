@@ -27,9 +27,7 @@
       "output": "static",
       "favicon": "./assets/images/bahbeta_logo.png"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "experiments": {
       "typedRoutes": true
     }

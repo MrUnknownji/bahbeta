@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -24,19 +25,30 @@ const iconData: Array<{
   id: string;
   name: FontAwesomeNames;
   label: string;
-  route?: "recreate-invoice" | "create-invoice" | "send-detail" | "request-invoice";
+  route?:
+    | "recreate-invoice"
+    | "create-invoice"
+    | "send-detail"
+    | "request-invoice";
 }> = [
   {
     id: "1",
-    name: "arrow-circle-right",
+    name: "arrow-circle-right" as FontAwesomeNames,
     label: "Send",
-    route: "create-invoice",
   },
-  { id: "2", name: "user", label: "Request", route: "recreate-invoice" },
-  { id: "3", name: "gift", label: "Send Gift" },
-  { id: "4", name: "tags", label: "Tags" },
-  { id: "5", name: "envelope", label: "Withdraw" ,route:"send-detail"},
-  { id: "6", name: "lightbulb-o", label: "Bill Pay", route: "request-invoice" },
+  {
+    id: "2",
+    name: "user" as FontAwesomeNames,
+    label: "Request",
+    route: "request-invoice",
+  },
+  { id: "3", name: "gift" as FontAwesomeNames, label: "Send Gift" },
+  { id: "4", name: "tags" as FontAwesomeNames, label: "Tags" },
+  {
+    id: "5",
+    name: "lightbulb-o" as FontAwesomeNames,
+    label: "Bill Pay",
+  },
 ];
 
 const quickSendData = [
@@ -88,20 +100,75 @@ const recentActivityData = [
 ];
 
 export default function InvoiceScreen() {
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
+
+  const handleIconPress = (item: (typeof iconData)[0]) => {
+    if (item.label === "Send") {
+      setIsDialogVisible(true);
+    } else if (item.route) {
+      router.push(`/invoice/${item.route}`);
+    }
+  };
+
   const handleInvoiceListItemPress = () => {
     router.push("/invoice/invoice-detail");
   };
+
+  const handleQuickSendItemPress = () => {
+    router.push("/invoice/send-detail");
+  };
+
+  const handleDialogOption = (option: "new" | "recurring") => {
+    setIsDialogVisible(false);
+    if (option === "new") {
+      router.push("/invoice/create-invoice");
+    } else {
+      router.push("/invoice/recreate-invoice");
+    }
+  };
+
   return (
     <View style={styles.container}>
+      <Modal
+        visible={isDialogVisible}
+        transparent
+        statusBarTranslucent
+        animationType="fade"
+        onRequestClose={() => setIsDialogVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.dialogContainer}>
+            <Text style={styles.dialogTitle}>Choose Invoice Type</Text>
+            <TouchableOpacity
+              style={styles.dialogButton}
+              onPress={() => handleDialogOption("new")}
+            >
+              <Text style={styles.dialogButtonText}>New Invoice</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.dialogButton}
+              onPress={() => handleDialogOption("recurring")}
+            >
+              <Text style={styles.dialogButtonText}>Recurring Invoice</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.dialogButton, styles.cancelButton]}
+              onPress={() => setIsDialogVisible(false)}
+            >
+              <Text style={[styles.dialogButtonText, styles.cancelButtonText]}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.iconsContainer}>
         {iconData.map((item) => (
           <TouchableOpacity
             style={styles.iconWrapper}
             key={item.id}
-            onPress={() => {
-              if(item.route){
-              router.push(`/invoice/${item.route}`);}
-            }}
+            onPress={() => handleIconPress(item)}
           >
             <View style={styles.iconContainer}>
               <FontAwesome name={item.name} size={24} color={Colors.primary} />
@@ -123,7 +190,11 @@ export default function InvoiceScreen() {
           contentContainerStyle={{ paddingHorizontal: 20 }}
         >
           {quickSendData.map((item) => (
-            <TouchableOpacity style={styles.quickSendItem} key={item.id}>
+            <TouchableOpacity
+              style={styles.quickSendItem}
+              key={item.id}
+              onPress={handleQuickSendItemPress}
+            >
               <View style={styles.quickSendItemAvatar}>
                 <Image
                   source={require("@/assets/images/quick-send-person.png")}
@@ -178,11 +249,10 @@ const styles = StyleSheet.create({
   iconsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "space-around",
     marginTop: 10,
   },
   iconWrapper: {
-    width: "30%",
+    width: "33.33%",
     alignItems: "center",
     marginVertical: 10,
   },
@@ -288,6 +358,44 @@ const styles = StyleSheet.create({
   recentActivityItemAmount: {
     fontSize: 20,
     fontWeight: "bold",
+    color: Colors.textPrimary,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  dialogContainer: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    width: "80%",
+    alignItems: "center",
+  },
+  dialogTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: Colors.textPrimary,
+  },
+  dialogButton: {
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: Colors.primary,
+    marginBottom: 10,
+  },
+  dialogButtonText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+  cancelButton: {
+    backgroundColor: "#f0f0f0",
+  },
+  cancelButtonText: {
     color: Colors.textPrimary,
   },
 });
